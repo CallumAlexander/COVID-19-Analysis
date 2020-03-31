@@ -74,7 +74,6 @@ fig, ax = plt.subplots(nrows=2, ncols=2)
 ax[0,0].plot(uk_X, uk_y, label='UK')
 ax[0,0].plot(italy_X, italy_y, label='Italy')
 ax[0,0].plot(spain_X, spain_y, label='Spain')
-ax[0,0].plot(uk_X, uk_y, label='UK')
 ax[0,0].plot(germany_X, germany_y, label='Germany')
 ax[0,0].plot(france_X, france_y, label='France')
 ax[0,0].legend()
@@ -100,10 +99,39 @@ ax[1,0].plot(italy_X, italy_deltaDaily, label='Italy - rate of change of daily c
 ax[1,0].plot(spain_X, spain_deltaDaily, label='Spain - rate of change of daily cases')
 ax[1,0].plot(germany_X, germany_deltaDaily, label='Germany - rate of change of daily cases')
 ax[1,0].plot(france_X, france_deltaDaily, label='France - rate of change of daily cases')
+ax[1,0].legend()
 ax[1,0].grid()
 ax[1,0].set(xlabel='Number of days', ylabel='Change in daily cases',
        title='Change in daily cases')
 
-
 plt.show()
+
+
+# Predicting the future differences in daily cases for UK
+#-------------------------------------------------------------
+'''
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(uk_X, uk_deltaDaily, test_size = 1/3, random_state = 0)
+
+
+from sklearn.linear_model import LinearRegression
+
+regression = LinearRegression()
+regression.fit(uk_X, uk_deltaDaily)
+
+futureDays = np.arange(start=(len(uk_X)+1),stop=147)
+futureDays.reshape(1, -1)
+
+uk_pred = regression.predict(futureDays)
+
+ax[1,1].plot(futureDays, uk_pred)
+ax[1,1].plot(uk_X, uk_deltaDaily)
+ax[1,1].grid()
+'''
+
+
+
+
+
+
 
