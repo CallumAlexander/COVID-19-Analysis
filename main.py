@@ -39,6 +39,14 @@ def delta(cases):
     y = np.asarray(y, dtype=np.int64)
     return y
 
+def regression(X, y):
+    denominator = X.dot(X) - X.mean() * X.sum()
+    m = ( X.dot(y) - y.mean() * X.sum() ) / denominator
+    b = ( y.mean() * X.dot(X) - X.mean() * X.dot(y) ) / denominator
+
+    return (m * X + b), m
+    
+
     
 
     
@@ -87,7 +95,7 @@ ax[0,1].plot(italy_X, italy_daily, label='Italy - daily cases')
 ax[0,1].plot(spain_X, spain_daily, label='Spain - daily cases')
 ax[0,1].plot(germany_X, germany_daily, label='Germany - daily cases')
 ax[0,1].plot(france_X, france_daily, label='France - daily cases')
-ax[0,1].legend()
+#ax[0,1].legend()
 ax[0,1].grid()
 ax[0,1].set(xlabel='Number of days', ylabel='Number of daily cases',
        title='Daily cases')
@@ -99,7 +107,7 @@ ax[1,0].plot(italy_X, italy_deltaDaily, label='Italy - rate of change of daily c
 ax[1,0].plot(spain_X, spain_deltaDaily, label='Spain - rate of change of daily cases')
 ax[1,0].plot(germany_X, germany_deltaDaily, label='Germany - rate of change of daily cases')
 ax[1,0].plot(france_X, france_deltaDaily, label='France - rate of change of daily cases')
-ax[1,0].legend()
+#ax[1,0].legend()
 ax[1,0].grid()
 ax[1,0].set(xlabel='Number of days', ylabel='Change in daily cases',
        title='Change in daily cases')
@@ -109,27 +117,29 @@ plt.show()
 
 # Predicting the future differences in daily cases for UK
 #-------------------------------------------------------------
-'''
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(uk_X, uk_deltaDaily, test_size = 1/3, random_state = 0)
+uk_deltaDaily_bestFit, uk_coef = regression(uk_X, uk_deltaDaily)
+italy_deltaDaily_bestFit, italy_coef = regression(italy_X, italy_deltaDaily)
+spain_deltaDaily_bestFit, spain_coef = regression(spain_X, spain_deltaDaily)
+france_deltaDaily_bestFit, france_coef = regression(france_X, france_deltaDaily)
+germany_deltaDaily_bestFit, germany_coef = regression(germany_X, germany_deltaDaily)
 
+def plotPredictions(X, y, pred):
+    ax[1,1].plot(X, y)
+    ax[1,1].plot(X, pred,'r')
+    ax[1,1].grid()
+    
+def printBestFitCoef(uk, italy, spain, france, germany):
+    print('A positive value indicates the virus is accelerating')
+    print('A negative value indicates the virus is decelerating\n')
+    print('UK      : ' + str(uk))
+    print('Italy   : ' + str(italy))
+    print('Spain   : ' + str(spain))
+    print('France  : ' + str(france))
+    print('Germany : ' + str(germany))
+    
 
-from sklearn.linear_model import LinearRegression
-
-regression = LinearRegression()
-regression.fit(uk_X, uk_deltaDaily)
-
-futureDays = np.arange(start=(len(uk_X)+1),stop=147)
-futureDays.reshape(1, -1)
-
-uk_pred = regression.predict(futureDays)
-
-ax[1,1].plot(futureDays, uk_pred)
-ax[1,1].plot(uk_X, uk_deltaDaily)
-ax[1,1].grid()
-'''
-
-
+plotPredictions(uk_X, uk_deltaDaily, uk_deltaDaily_bestFit)
+printBestFitCoef(uk_coef, italy_coef, spain_coef, france_coef, germany_coef)
 
 
 
