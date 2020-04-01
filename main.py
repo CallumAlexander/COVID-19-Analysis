@@ -12,6 +12,14 @@ Created on Thu Mar 26 17:58:00 2020
 @author: cal
 """
 
+"""
+THEORY behind all this code:
+
+My understanding is that if you can track and predict the change in number
+of daily cases, i.e. the 2nd order of the number of confirmed cases, then 
+you can estimate the trajectory of spread of the virus.
+"""
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
