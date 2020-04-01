@@ -24,22 +24,24 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-#Read data from source
+# Read data from source
 data = 'https://data.humdata.org/hxlproxy/api/data-preview.csv?url=https%3A%2F%2Fraw.githubusercontent.com%2FCSSEGISandData%2FCOVID-19%2Fmaster%2Fcsse_covid_19_data%2Fcsse_covid_19_time_series%2Ftime_series_covid19_confirmed_global.csv&filename=time_series_covid19_confirmed_global.csv'
 df = pd.read_csv(data)
 
-#Data preprocessing function
+
+# Data preprocessing function
 def preprocess(dataset, country):
     isCountry = (df['Country/Region'] == country)
     countryData = df[isCountry]
     isCountry = countryData['Province/State'].isna()
     countryData = countryData[isCountry]
-    
+
     y = countryData.iloc[:, 4:].values
     y = np.transpose(y)
     y = y.flatten()
     X = np.arange(len(y))
     return X, y
+
 
 def delta(cases):
     y = [t - s for s, t in zip(cases, cases[1:])]
@@ -47,25 +49,23 @@ def delta(cases):
     y = np.asarray(y, dtype=np.int64)
     return y
 
+
 def regression(X, y):
     denominator = X.dot(X) - X.mean() * X.sum()
-    m = ( X.dot(y) - y.mean() * X.sum() ) / denominator
-    b = ( y.mean() * X.dot(X) - X.mean() * X.dot(y) ) / denominator
+    m = (X.dot(y) - y.mean() * X.sum()) / denominator
+    b = (y.mean() * X.dot(X) - X.mean() * X.dot(y)) / denominator
 
     return (m * X + b), m
-    
 
-    
 
-    
-#Preprocessing data
+# Preprocessing data
 italy_X, italy_y = preprocess(df, 'Italy')
 spain_X, spain_y = preprocess(df, 'Spain')
 uk_X, uk_y = preprocess(df, 'United Kingdom')
 germany_X, germany_y = preprocess(df, 'Germany')
 france_X, france_y = preprocess(df, 'France')
 
-#Gathering derivatives
+# Gathering derivatives
 uk_dailyY = delta(uk_y)
 uk_deltaDaily = delta(uk_dailyY)
 
@@ -81,61 +81,59 @@ germany_deltaDaily = delta(germany_daily)
 france_daily = delta(france_y)
 france_deltaDaily = delta(france_daily)
 
-
-
-#Plotting data
+# Plotting data
 fig, ax = plt.subplots(nrows=2, ncols=2)
 
 # Plotting confirmed cases
-ax[0,0].plot(uk_X, uk_y, label='UK')
-ax[0,0].plot(italy_X, italy_y, label='Italy')
-ax[0,0].plot(spain_X, spain_y, label='Spain')
-ax[0,0].plot(germany_X, germany_y, label='Germany')
-ax[0,0].plot(france_X, france_y, label='France')
-ax[0,0].legend()
-ax[0,0].grid()
-ax[0,0].set(xlabel='Number of days', ylabel='Confirmed cases',
-       title='Confirmed cases')
+ax[0, 0].plot(uk_X, uk_y, label='UK')
+ax[0, 0].plot(italy_X, italy_y, label='Italy')
+ax[0, 0].plot(spain_X, spain_y, label='Spain')
+ax[0, 0].plot(germany_X, germany_y, label='Germany')
+ax[0, 0].plot(france_X, france_y, label='France')
+ax[0, 0].legend()
+ax[0, 0].grid()
+ax[0, 0].set(xlabel='Number of days', ylabel='Confirmed cases',
+             title='Confirmed cases')
 
-#Plotting daily cases
-ax[0,1].plot(uk_X, uk_dailyY, label='UK - daily cases')
-ax[0,1].plot(italy_X, italy_daily, label='Italy - daily cases')
-ax[0,1].plot(spain_X, spain_daily, label='Spain - daily cases')
-ax[0,1].plot(germany_X, germany_daily, label='Germany - daily cases')
-ax[0,1].plot(france_X, france_daily, label='France - daily cases')
-#ax[0,1].legend()
-ax[0,1].grid()
-ax[0,1].set(xlabel='Number of days', ylabel='Number of daily cases',
-       title='Daily cases')
-
+# Plotting daily cases
+ax[0, 1].plot(uk_X, uk_dailyY, label='UK - daily cases')
+ax[0, 1].plot(italy_X, italy_daily, label='Italy - daily cases')
+ax[0, 1].plot(spain_X, spain_daily, label='Spain - daily cases')
+ax[0, 1].plot(germany_X, germany_daily, label='Germany - daily cases')
+ax[0, 1].plot(france_X, france_daily, label='France - daily cases')
+ax[0, 1].legend()
+ax[0, 1].grid()
+ax[0, 1].set(xlabel='Number of days', ylabel='Number of daily cases',
+             title='Daily cases')
 
 # Plotting differences in daily cases
-ax[1,0].plot(uk_X, uk_deltaDaily, label='UK - rate of change of daily cases')
-ax[1,0].plot(italy_X, italy_deltaDaily, label='Italy - rate of change of daily cases')
-ax[1,0].plot(spain_X, spain_deltaDaily, label='Spain - rate of change of daily cases')
-ax[1,0].plot(germany_X, germany_deltaDaily, label='Germany - rate of change of daily cases')
-ax[1,0].plot(france_X, france_deltaDaily, label='France - rate of change of daily cases')
-#ax[1,0].legend()
-ax[1,0].grid()
-ax[1,0].set(xlabel='Number of days', ylabel='Change in daily cases',
-       title='Change in daily cases')
+ax[1, 0].plot(uk_X, uk_deltaDaily, label='UK - rate of change of daily cases')
+ax[1, 0].plot(italy_X, italy_deltaDaily, label='Italy - rate of change of daily cases')
+ax[1, 0].plot(spain_X, spain_deltaDaily, label='Spain - rate of change of daily cases')
+ax[1, 0].plot(germany_X, germany_deltaDaily, label='Germany - rate of change of daily cases')
+ax[1, 0].plot(france_X, france_deltaDaily, label='France - rate of change of daily cases')
+ax[1, 0].legend()
+ax[1, 0].grid()
+ax[1, 0].set(xlabel='Number of days', ylabel='Change in daily cases',
+             title='Change in daily cases')
 
 plt.show()
 
-
 # Predicting the future differences in daily cases for UK
-#-------------------------------------------------------------
+# -------------------------------------------------------------
 uk_deltaDaily_bestFit, uk_coef = regression(uk_X, uk_deltaDaily)
 italy_deltaDaily_bestFit, italy_coef = regression(italy_X, italy_deltaDaily)
 spain_deltaDaily_bestFit, spain_coef = regression(spain_X, spain_deltaDaily)
 france_deltaDaily_bestFit, france_coef = regression(france_X, france_deltaDaily)
 germany_deltaDaily_bestFit, germany_coef = regression(germany_X, germany_deltaDaily)
 
+
 def plotPredictions(X, y, pred):
-    ax[1,1].plot(X, y)
-    ax[1,1].plot(X, pred,'r')
-    ax[1,1].grid()
-    
+    ax[1, 1].plot(X, y)
+    ax[1, 1].plot(X, pred, 'r')
+    ax[1, 1].grid()
+
+
 def printBestFitCoef(uk, italy, spain, france, germany):
     print('A positive value indicates the virus is accelerating')
     print('A negative value indicates the virus is decelerating\n')
@@ -144,12 +142,7 @@ def printBestFitCoef(uk, italy, spain, france, germany):
     print('Spain   : ' + str(spain))
     print('France  : ' + str(france))
     print('Germany : ' + str(germany))
-    
+
 
 plotPredictions(uk_X, uk_deltaDaily, uk_deltaDaily_bestFit)
 printBestFitCoef(uk_coef, italy_coef, spain_coef, france_coef, germany_coef)
-
-
-
-
-
