@@ -158,25 +158,32 @@ plotPredictions(uk_X, uk_deltaDaily, uk_deltaDaily_bestFit, 'United Kingdom')
 printBestFitCoef(uk_coef, italy_coef, spain_coef, france_coef, germany_coef)
 
 
-# Case to case work
+# Calculating and plotting the adjusted confirmed cases
+# -----------------------------------------------------------
+
+# Working out when all the data itersects, in this case they all itersect at 2 cases
 A = np.array([italy_y, spain_y, germany_y, france_y])
 print([np.intersect1d(uk_y, A_i) for A_i in A])
 
+# Computing the indices where the cases = 2
 uk_y_adj_index = np.argwhere(uk_y == 2)[0].item()
 italy_y_adj_index = np.argwhere(italy_y == 2)[0].item()
 spain_y_adj_index = np.argwhere(spain_y == 2)[0].item()
 france_y_adj_index = np.argwhere(france_y == 2)[0].item()
 
+# Adjusting the arrays to start when the cases = 2
 uk_y_adj = uk_y[uk_y_adj_index:]
 italy_y_adj = italy_y[italy_y_adj_index:]
 spain_y_adj = spain_y[spain_y_adj_index:]
 france_y_adj = france_y[france_y_adj_index:]
 
+# Computing appropriate X values for each set of data
 X_uk_adj = np.arange(0, len(uk_y_adj))
 X_italy_adj = np.arange(0, len(italy_y_adj))
 X_spain_adj = np.arange(0, len(spain_y_adj))
 X_france_adj = np.arange(0, len(france_y_adj))
 
+# Plotting the data
 ax[2, 0].plot(X_uk_adj, uk_y_adj, label='UK')
 ax[2, 0].plot(X_italy_adj, italy_y_adj, label='Italy')
 ax[2, 0].plot(X_spain_adj, spain_y_adj, label='Spain')
