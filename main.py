@@ -25,7 +25,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read data from source
-data = 'https://data.humdata.org/hxlproxy/api/data-preview.csv?url=https%3A%2F%2Fraw.githubusercontent.com%2FCSSEGISandData%2FCOVID-19%2Fmaster%2Fcsse_covid_19_data%2Fcsse_covid_19_time_series%2Ftime_series_covid19_confirmed_global.csv&filename=time_series_covid19_confirmed_global.csv'
+data = 'https://data.humdata.org/hxlproxy/api/data-preview.csv?url=https%3A%2F%2Fraw.githubusercontent.com' \
+       '%2FCSSEGISandData%2FCOVID-19%2Fmaster%2Fcsse_covid_19_data%2Fcsse_covid_19_time_series' \
+       '%2Ftime_series_covid19_confirmed_global.csv&filename=time_series_covid19_confirmed_global.csv '
 df = pd.read_csv(data)
 
 
@@ -90,7 +92,7 @@ ax[0, 0].plot(italy_X, italy_y, label='Italy')
 ax[0, 0].plot(spain_X, spain_y, label='Spain')
 ax[0, 0].plot(germany_X, germany_y, label='Germany')
 ax[0, 0].plot(france_X, france_y, label='France')
-ax[0, 0].legend()
+ax[0, 0].legend(fontsize='x-small')
 ax[0, 0].grid()
 ax[0, 0].set(xlabel='Number of days', ylabel='Confirmed cases',
              title='Confirmed cases')
@@ -101,7 +103,7 @@ ax[0, 1].plot(italy_X, italy_daily, label='Italy - daily cases')
 ax[0, 1].plot(spain_X, spain_daily, label='Spain - daily cases')
 ax[0, 1].plot(germany_X, germany_daily, label='Germany - daily cases')
 ax[0, 1].plot(france_X, france_daily, label='France - daily cases')
-ax[0, 1].legend()
+ax[0, 1].legend(fontsize='x-small')
 ax[0, 1].grid()
 ax[0, 1].set(xlabel='Number of days', ylabel='Number of daily cases',
              title='Daily cases')
@@ -112,7 +114,7 @@ ax[1, 0].plot(italy_X, italy_deltaDaily, label='Italy - rate of change of daily 
 ax[1, 0].plot(spain_X, spain_deltaDaily, label='Spain - rate of change of daily cases')
 ax[1, 0].plot(germany_X, germany_deltaDaily, label='Germany - rate of change of daily cases')
 ax[1, 0].plot(france_X, france_deltaDaily, label='France - rate of change of daily cases')
-ax[1, 0].legend()
+ax[1, 0].legend(fontsize='xx-small')
 ax[1, 0].grid()
 ax[1, 0].set(xlabel='Number of days', ylabel='Change in daily cases',
              title='Change in daily cases')
@@ -128,9 +130,11 @@ france_deltaDaily_bestFit, france_coef = regression(france_X, france_deltaDaily)
 germany_deltaDaily_bestFit, germany_coef = regression(germany_X, germany_deltaDaily)
 
 
-def plotPredictions(X, y, pred):
+def plotPredictions(X, y, pred, country):
     ax[1, 1].plot(X, y)
     ax[1, 1].plot(X, pred, 'r')
+    ax[1, 1].set(xlabel='Number of days', ylabel='Change in daily cases',
+                 title='Predicted trajectory for ' + country)
     ax[1, 1].grid()
 
 
@@ -144,5 +148,5 @@ def printBestFitCoef(uk, italy, spain, france, germany):
     print('Germany : ' + str(germany))
 
 
-plotPredictions(uk_X, uk_deltaDaily, uk_deltaDaily_bestFit)
+plotPredictions(uk_X, uk_deltaDaily, uk_deltaDaily_bestFit, 'United Kingdom')
 printBestFitCoef(uk_coef, italy_coef, spain_coef, france_coef, germany_coef)
