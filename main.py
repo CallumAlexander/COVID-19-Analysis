@@ -45,6 +45,7 @@ def preprocess(dataset, country):
     return X, y
 
 
+# Calculates the difference in adjacent array values
 def delta(cases):
     y = [t - s for s, t in zip(cases, cases[1:])]
     y = [0] + y
@@ -52,6 +53,8 @@ def delta(cases):
     return y
 
 
+# Linear Regression
+# *NOTE - unable to fit the data to sklearn's Linear Model so this was the alternative
 def regression(X, y):
     denominator = X.dot(X) - X.mean() * X.sum()
     m = (X.dot(y) - y.mean() * X.sum()) / denominator
@@ -60,7 +63,7 @@ def regression(X, y):
     return (m * X + b), m
 
 
-# Preprocessing data
+# Preprocessing and gathering data
 italy_X, italy_y = preprocess(df, 'Italy')
 spain_X, spain_y = preprocess(df, 'Spain')
 uk_X, uk_y = preprocess(df, 'United Kingdom')
@@ -83,8 +86,10 @@ germany_deltaDaily = delta(germany_daily)
 france_daily = delta(france_y)
 france_deltaDaily = delta(france_daily)
 
+
+# --------------------------------
 # Plotting data
-fig, ax = plt.subplots(nrows=2, ncols=2)
+fig, ax = plt.subplots(nrows=3, ncols=2)
 
 # Plotting confirmed cases
 ax[0, 0].plot(uk_X, uk_y, label='UK')
@@ -119,7 +124,6 @@ ax[1, 0].grid()
 ax[1, 0].set(xlabel='Number of days', ylabel='Change in daily cases',
              title='Change in daily cases')
 
-plt.show()
 
 # Predicting the future differences in daily cases for UK
 # -------------------------------------------------------------
@@ -131,16 +135,18 @@ germany_deltaDaily_bestFit, germany_coef = regression(germany_X, germany_deltaDa
 
 
 def plotPredictions(X, y, pred, country):
-    ax[1, 1].plot(X, y)
-    ax[1, 1].plot(X, pred, 'r')
+    ax[1, 1].bar(X, y, label=country)
+    ax[1, 1].plot(X, pred, 'r', label='Predicted trajectory')
     ax[1, 1].set(xlabel='Number of days', ylabel='Change in daily cases',
                  title='Predicted trajectory for ' + country)
+    ax[1, 1].legend(fontsize='x-small')
     ax[1, 1].grid()
 
 
 def printBestFitCoef(uk, italy, spain, france, germany):
     print('A positive value indicates the virus is accelerating')
-    print('A negative value indicates the virus is decelerating\n')
+    print('A negative value indicates the virus is decelerating')
+    print('--------------------------------------------------------\n')
     print('UK      : ' + str(uk))
     print('Italy   : ' + str(italy))
     print('Spain   : ' + str(spain))
@@ -150,3 +156,34 @@ def printBestFitCoef(uk, italy, spain, france, germany):
 
 plotPredictions(uk_X, uk_deltaDaily, uk_deltaDaily_bestFit, 'United Kingdom')
 printBestFitCoef(uk_coef, italy_coef, spain_coef, france_coef, germany_coef)
+
+
+# Case to case work
+A = np.array([italy_y, spain_y, germany_y, france_y])
+print([np.intersect1d(uk_y, A_i) for A_i in A])
+
+uk_y_adj_index = np.argwhere(uk_y == 2)[0].item()
+italy_y_adj_index = np.argwhere(italy_y == 2)[0].item()
+spain_y_adj_index = np.argwhere(spain_y == 2)[0].item()
+france_y_adj_index = np.argwhere(france_y == 2)[0].item()
+
+uk_y_adj = uk_y[uk_y_adj_index:]
+italy_y_adj = italy_y[italy_y_adj_index:]
+spain_y_adj = spain_y[spain_y_adj_index:]
+france_y_adj = france_y[france_y_adj_index:]
+
+X_uk_adj = np.arange(0, len(uk_y_adj))
+X_italy_adj = np.arange(0, len(italy_y_adj))
+X_spain_adj = np.arange(0, len(spain_y_adj))
+X_france_adj = np.arange(0, len(france_y_adj))
+
+ax[2, 0].plot(X_uk_adj, uk_y_adj, label='UK')
+ax[2, 0].plot(X_italy_adj, italy_y_adj, label='Italy')
+ax[2, 0].plot(X_spain_adj, spain_y_adj, label='Spain')
+ax[2, 0].plot(X_france_adj, france_y_adj, label='France')
+ax[2, 0].legend()
+ax[2, 0].grid()
+ax[2, 0].set(xlabel='Number of days since 2nd case', ylabel='Confirmed cases',
+             title='Confirmed cases (adjusted)')
+
+
