@@ -45,3 +45,22 @@ def regression(X, y):
     b = (y.mean() * X.dot(X) - X.mean() * X.dot(y)) / denominator
 
     return (m * X + b), m
+
+
+def printBestFitCoef(uk, italy, spain, france, germany):
+    print('A positive value indicates the virus is accelerating')
+    print('A negative value indicates the virus is decelerating')
+    print('--------------------------------------------------------\n')
+    print('UK      : ' + str(uk))
+    print('Italy   : ' + str(italy))
+    print('Spain   : ' + str(spain))
+    print('France  : ' + str(france))
+    print('Germany : ' + str(germany))
+
+
+def movingAverage10days(y):
+    mean = np.zeros(len(y) - 10)
+    X = np.arange(9, len(y)-1)
+    for i in range(len(mean)):
+        mean[i] = np.average(y[i:i+9])
+    return mean, X

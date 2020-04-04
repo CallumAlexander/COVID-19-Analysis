@@ -122,23 +122,16 @@ ax[2, 1].set(title='Current Trajectories for changes in daily ' + placeholder)
 
 
 def plotPredictions(X, y, pred, country):
+
+    movingAverage, X_mean = movingAverage10days(y)
+
     ax[1, 1].bar(X, y, label=country)
     ax[1, 1].plot(X, pred, 'r', label='Predicted trajectory')
+    ax[1, 1].plot(X_mean, movingAverage, 'g', label='10 day moving average')
     ax[1, 1].set(xlabel='Number of days', ylabel='Change in daily ' + placeholder,
                  title='Predicted trajectory for ' + country)
     ax[1, 1].legend(fontsize='x-small')
     ax[1, 1].grid()
-
-
-def printBestFitCoef(uk, italy, spain, france, germany):
-    print('A positive value indicates the virus is accelerating')
-    print('A negative value indicates the virus is decelerating')
-    print('--------------------------------------------------------\n')
-    print('UK      : ' + str(uk))
-    print('Italy   : ' + str(italy))
-    print('Spain   : ' + str(spain))
-    print('France  : ' + str(france))
-    print('Germany : ' + str(germany))
 
 
 plotPredictions(uk_X, uk_deltaDaily, uk_deltaDaily_bestFit, 'United Kingdom')
