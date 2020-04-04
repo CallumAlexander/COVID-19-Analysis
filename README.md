@@ -3,7 +3,7 @@ by Cal Alexander
 
 [![time tracker](https://wakatime.com/badge/github/CallumAlexander/COVID-19-Analysis.svg)](https://wakatime.com/badge/github/CallumAlexander/COVID-19-Analysis)
 
-##Features
+## Features
 
 * Plots data for the following countries:
     * United Kingdom

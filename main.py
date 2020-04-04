@@ -23,44 +23,21 @@ you can estimate the trajectory of spread of the virus.
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from utils import *
 
 # Read data from source
-data = 'https://data.humdata.org/hxlproxy/api/data-preview.csv?url=https%3A%2F%2Fraw.githubusercontent.com' \
-       '%2FCSSEGISandData%2FCOVID-19%2Fmaster%2Fcsse_covid_19_data%2Fcsse_covid_19_time_series' \
-       '%2Ftime_series_covid19_confirmed_global.csv&filename=time_series_covid19_confirmed_global.csv '
-df = pd.read_csv(data)
+caseData = 'https://data.humdata.org/hxlproxy/api/data-preview.csv?url=https%3A%2F%2Fraw.githubusercontent.com' \
+            '%2FCSSEGISandData%2FCOVID-19%2Fmaster%2Fcsse_covid_19_data%2Fcsse_covid_19_time_series' \
+            '%2Ftime_series_covid19_confirmed_global.csv&filename=time_series_covid19_confirmed_global.csv '
+deathData = 'https://data.humdata.org/hxlproxy/api/data-preview.csv?url=https%3A%2F%2Fraw.githubusercontent.com' \
+            '%2FCSSEGISandData%2FCOVID-19%2Fmaster%2Fcsse_covid_19_data%2Fcsse_covid_19_time_series' \
+            '%2Ftime_series_covid19_deaths_global.csv&filename=time_series_covid19_deaths_global.csv '
 
-
-# Data preprocessing function
-def preprocess(dataset, country):
-    isCountry = (df['Country/Region'] == country)
-    countryData = df[isCountry]
-    isCountry = countryData['Province/State'].isna()
-    countryData = countryData[isCountry]
-
-    y = countryData.iloc[:, 4:].values
-    y = np.transpose(y)
-    y = y.flatten()
-    X = np.arange(len(y))
-    return X, y
-
-
-# Calculates the difference in adjacent array values
-def delta(cases):
-    y = [t - s for s, t in zip(cases, cases[1:])]
-    y = [0] + y
-    y = np.asarray(y, dtype=np.int64)
-    return y
-
-
-# Linear Regression
-# *NOTE - unable to fit the data to sklearn's Linear Model so this was the alternative
-def regression(X, y):
-    denominator = X.dot(X) - X.mean() * X.sum()
-    m = (X.dot(y) - y.mean() * X.sum()) / denominator
-    b = (y.mean() * X.dot(X) - X.mean() * X.dot(y)) / denominator
-
-    return (m * X + b), m
+choice = input('>>>>>  ')
+if choice == 'c':
+    df = pd.read_csv(caseData)
+else:
+    df = pd.read_csv(deathData)
 
 
 # Preprocessing and gathering data
