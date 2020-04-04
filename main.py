@@ -24,6 +24,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from utils import *
+from forecasting import *
 
 # Read data from source
 caseData = 'https://data.humdata.org/hxlproxy/api/data-preview.csv?url=https%3A%2F%2Fraw.githubusercontent.com' \
@@ -122,12 +123,13 @@ ax[2, 1].set(title='Current Trajectories for changes in daily ' + placeholder)
 
 
 def plotPredictions(X, y, pred, country):
-
-    movingAverage, X_mean = movingAverage10days(y)
+    movingAverage10, X_mean10 = movingAverage10days(y)
+    movingAverage20, X_mean20 = movingAverage20days(y)
 
     ax[1, 1].bar(X, y, label=country)
-    ax[1, 1].plot(X, pred, 'r', label='Predicted trajectory')
-    ax[1, 1].plot(X_mean, movingAverage, 'g', label='10 day moving average')
+    # ax[1, 1].plot(X, pred, 'r', label='Predicted trajectory')
+    ax[1, 1].plot(X_mean10, movingAverage10, 'g', label='10 day moving average')
+    ax[1, 1].plot(X_mean20, movingAverage20, 'r', label='20 day moving average')
     ax[1, 1].set(xlabel='Number of days', ylabel='Change in daily ' + placeholder,
                  title='Predicted trajectory for ' + country)
     ax[1, 1].legend(fontsize='x-small')
@@ -140,7 +142,7 @@ printBestFitCoef(uk_coef, italy_coef, spain_coef, france_coef, germany_coef)
 # Calculating and plotting the adjusted confirmed cases
 # -----------------------------------------------------------
 
-# Working out when all the data itersects, in this case they all itersect at 2 cases
+# Working out when all the data intersects, in this case they all intersect at 2 cases
 A = np.array([italy_y, spain_y, germany_y, france_y])
 print([np.intersect1d(uk_y, A_i) for A_i in A])
 
@@ -163,7 +165,7 @@ X_spain_adj = np.arange(0, len(spain_y_adj))
 X_france_adj = np.arange(0, len(france_y_adj))
 
 # Plotting the data
-ax[2, 0].plot(X_uk_adj, uk_y_adj, label='UK')
+'''ax[2, 0].plot(X_uk_adj, uk_y_adj, label='UK')
 ax[2, 0].plot(X_italy_adj, italy_y_adj, label='Italy')
 ax[2, 0].plot(X_spain_adj, spain_y_adj, label='Spain')
 ax[2, 0].plot(X_france_adj, france_y_adj, label='France')
@@ -171,3 +173,9 @@ ax[2, 0].legend()
 ax[2, 0].grid()
 ax[2, 0].set(xlabel='Number of days since 2nd ' + placeholder, ylabel=placeholder,
              title=placeholder + ' (adjusted)')
+'''
+# Forecasting Uk daily
+pdq, seasonal_pdq = findOptimumForecastParam(uk_dailyY)
+results = forecast(y, pdq, seasonal_pdq)
+
+
