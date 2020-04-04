@@ -38,13 +38,7 @@ def findOptimumForecastParam(y):
 
         optimumIndex = np.argmin(np.asarray(aicList))
         print('{}, {}, {}'.format(aicList[optimumIndex], paramList[optimumIndex], param_seasonalList[optimumIndex]))
-        return paramList[optimumIndex], param_seasonalList[optimumIndex]
-
-        '''        
-        aicList = np.asarray(aicList)
-        optimumIndex = np.argmin(aicList[:, 2])
-        print('{}'.format(aicList[optimumIndex, 0], aicList[optimumIndex, 1], aicList[optimumIndex, 2]))
-        '''
+        return paramList[optimumIndex], param_seasonalList[optimumIndex], aicList[optimumIndex]
 
 
 def forecast(y, pdq, seasonal_pdq):

@@ -22,6 +22,7 @@ you can estimate the trajectory of spread of the virus.
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import math
 
 from utils import *
 from forecasting import *
@@ -174,8 +175,26 @@ ax[2, 0].grid()
 ax[2, 0].set(xlabel='Number of days since 2nd ' + placeholder, ylabel=placeholder,
              title=placeholder + ' (adjusted)')
 '''
-# Forecasting Uk daily
-pdq, seasonal_pdq = findOptimumForecastParam(uk_dailyY)
-results = forecast(y, pdq, seasonal_pdq)
 
 
+# Forecasting Uk deaths
+def makeForecast(X, y, future_val, label):
+    global placeholder
+    start = len(X)-1
+    distance = future_val
+    pdq, seasonal_pdq, aic = findOptimumForecastParam(y)
+    results = forecast(y, pdq, seasonal_pdq)
+    y_forecast = results.get_forecast(steps=distance)
+    X_forecast = np.arange(start, start + distance)
+
+    print('AIC: ' + str(aic))
+
+    ax[2, 0].plot(X, y, label=label + placeholder)
+    ax[2, 0].plot(X_forecast, y_forecast.predicted_mean, label='Forecast: ' + placeholder)
+    ax[2, 0].grid()
+    ax[2, 0].legend()
+    ax[2, 0].set(xlabel=label + placeholder, ylabel=placeholder,
+                 title=placeholder + ' (forecast)')
+
+
+makeForecast(uk_X, uk_y, 2, 'United Kingdom')
