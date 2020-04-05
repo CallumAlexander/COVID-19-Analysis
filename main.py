@@ -128,7 +128,7 @@ def plotPredictions(X, y, pred, country):
     movingAverage20, X_mean20 = movingAverage20days(y)
 
     ax[1, 1].bar(X, y, label=country)
-    # ax[1, 1].plot(X, pred, 'r', label='Predicted trajectory')
+    ax[1, 1].plot(X, pred, 'r', label='Predicted trajectory')
     ax[1, 1].plot(X_mean10, movingAverage10, 'g', label='10 day moving average')
     ax[1, 1].plot(X_mean20, movingAverage20, 'r', label='20 day moving average')
     ax[1, 1].set(xlabel='Number of days', ylabel='Change in daily ' + placeholder,
@@ -180,7 +180,7 @@ ax[2, 0].set(xlabel='Number of days since 2nd ' + placeholder, ylabel=placeholde
 # Forecasting Uk deaths
 def makeForecast(X, y, future_val, label):
     global placeholder
-    start = len(X)-1
+    start = len(X) - 1
     distance = future_val
     pdq, seasonal_pdq, aic = findOptimumForecastParam(y)
     results = forecast(y, pdq, seasonal_pdq)
