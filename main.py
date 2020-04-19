@@ -20,12 +20,8 @@ of daily cases, i.e. the 2nd order of the number of confirmed cases, then
 you can estimate the trajectory of spread of the virus.
 """
 
-import matplotlib.pyplot as plt
-import pandas as pd
-import math
-
-from utils import *
 from forecasting import *
+from utils import *
 
 # Read data from source
 caseData = 'https://data.humdata.org/hxlproxy/api/data-preview.csv?url=https%3A%2F%2Fraw.githubusercontent.com' \
@@ -87,7 +83,7 @@ ax[0, 1].plot(uk_X, uk_dailyY, label='UK - daily ' + placeholder)
 ax[0, 1].plot(italy_X, italy_daily, label='Italy - daily ' + placeholder)
 ax[0, 1].plot(spain_X, spain_daily, label='Spain - daily ' + placeholder)
 ax[0, 1].plot(germany_X, germany_daily, label='Germany - daily ' + placeholder)
-ax[0, 1].plot(france_X, france_daily, label='France - daily ' + placeholder)
+# ax[0, 1].plot(france_X, france_daily, label='France - daily ' + placeholder)
 ax[0, 1].legend(fontsize='x-small')
 ax[0, 1].grid()
 ax[0, 1].set(xlabel='Number of days', ylabel='Number of daily ' + placeholder,
@@ -99,6 +95,7 @@ ax[1, 0].plot(italy_X, italy_deltaDaily, label='Italy - rate of change of daily 
 ax[1, 0].plot(spain_X, spain_deltaDaily, label='Spain - rate of change of daily ' + placeholder)
 ax[1, 0].plot(germany_X, germany_deltaDaily, label='Germany - rate of change of daily ' + placeholder)
 ax[1, 0].plot(france_X, france_deltaDaily, label='France - rate of change of daily ' + placeholder)
+ax[1, 0].set_ylim(-6000, 6000)
 ax[1, 0].legend(fontsize='xx-small')
 ax[1, 0].grid()
 ax[1, 0].set(xlabel='Number of days', ylabel='Change in daily ' + placeholder,
@@ -124,20 +121,20 @@ ax[2, 1].set(title='Current Trajectories for changes in daily ' + placeholder)
 
 
 def plotPredictions(X, y, pred, country):
-    movingAverage10, X_mean10 = movingAverage10days(y)
-    movingAverage20, X_mean20 = movingAverage20days(y)
+    movingAverage10, X_mean10 = movingAverage7days(y)
+    movingAverage20, X_mean20 = movingAverage2weeks(y)
 
     ax[1, 1].bar(X, y, label=country)
-    ax[1, 1].plot(X, pred, 'r', label='Predicted trajectory')
-    ax[1, 1].plot(X_mean10, movingAverage10, 'g', label='10 day moving average')
-    ax[1, 1].plot(X_mean20, movingAverage20, 'r', label='20 day moving average')
+    # ax[1, 1].plot(X, pred, 'r', label='Predicted trajectory')
+    ax[1, 1].plot(X_mean10, movingAverage10, 'g', label='1 week moving average')
+    ax[1, 1].plot(X_mean20, movingAverage20, 'r', label='2 week moving average')
     ax[1, 1].set(xlabel='Number of days', ylabel='Change in daily ' + placeholder,
                  title='Predicted trajectory for ' + country)
     ax[1, 1].legend(fontsize='x-small')
     ax[1, 1].grid()
 
 
-plotPredictions(uk_X, uk_deltaDaily, uk_deltaDaily_bestFit, 'United Kingdom')
+plotPredictions(spain_X, spain_daily, spain_deltaDaily_bestFit, 'Spain')
 printBestFitCoef(uk_coef, italy_coef, spain_coef, france_coef, germany_coef)
 
 # Calculating and plotting the adjusted confirmed cases
@@ -197,4 +194,4 @@ def makeForecast(X, y, future_val, label):
                  title=placeholder + ' (forecast)')
 
 
-makeForecast(uk_X, uk_y, 2, 'United Kingdom')
+makeForecast(uk_X, uk_dailyY, 45, 'United Kingdom')

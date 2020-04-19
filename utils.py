@@ -58,17 +58,17 @@ def printBestFitCoef(uk, italy, spain, france, germany):
     print('Germany : ' + str(germany))
 
 
-def movingAverage10days(y):
-    mean = np.zeros(len(y) - 10)
-    X = np.arange(9, len(y) - 1)
+def movingAverage7days(y):
+    mean = np.zeros(len(y) - 7)
+    X = np.arange(6, len(y) - 1)
     for i in range(len(mean)):
-        mean[i] = np.average(y[i:i + 9])
+        mean[i] = np.average(y[i:i + 6])
     return mean, X
 
 
-def movingAverage20days(y):
-    mean = np.zeros(len(y) - 20)
-    X = np.arange(19, len(y) - 1)
+def movingAverage2weeks(y):
+    mean = np.zeros(len(y) - 14)
+    X = np.arange(13, len(y) - 1)
     for i in range(len(mean)):
-        mean[i] = np.average(y[i:i + 19])
+        mean[i] = np.average(y[i:i + 13])
     return mean, X
