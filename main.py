@@ -121,8 +121,8 @@ ax[2, 1].set(title='Current Trajectories for changes in daily ' + placeholder)
 
 
 def plotPredictions(X, y, pred, country):
-    movingAverage10, X_mean10 = movingAverage7days(y)
-    movingAverage20, X_mean20 = movingAverage2weeks(y)
+    movingAverage10, X_mean10 = movingAverage(y, 7)
+    movingAverage20, X_mean20 = movingAverage(y, 7)
 
     ax[1, 1].bar(X, y, label=country)
     # ax[1, 1].plot(X, pred, 'r', label='Predicted trajectory')
