@@ -3,6 +3,7 @@ from main import *
 
 def plotAllDaily():
     fig, ax = plt.subplots(nrows=3, ncols=2)
+    fig.suptitle('Daily figures (Extended) - '+ placeholder, fontsize=16)
 
     plotDailyExtended(uk_X, uk_dailyY, 14, 'United Kingdom', fig, ax, 0, 0)
     plotDailyExtended(france_X, france_daily, 14, 'France', fig, ax, 0, 1)

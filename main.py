@@ -95,7 +95,6 @@ ax[1, 0].plot(italy_X, italy_deltaDaily, label='Italy - rate of change of daily 
 ax[1, 0].plot(spain_X, spain_deltaDaily, label='Spain - rate of change of daily ' + placeholder)
 ax[1, 0].plot(germany_X, germany_deltaDaily, label='Germany - rate of change of daily ' + placeholder)
 ax[1, 0].plot(france_X, france_deltaDaily, label='France - rate of change of daily ' + placeholder)
-ax[1, 0].set_ylim(-6000, 6000)
 ax[1, 0].legend(fontsize='xx-small')
 ax[1, 0].grid()
 ax[1, 0].set(xlabel='Number of days', ylabel='Change in daily ' + placeholder,
