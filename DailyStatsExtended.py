@@ -15,6 +15,7 @@ def plotDailyExtended(X, y, future, label, figure, axis, axX, axY):
     # Calculating moving averages
     movingAverage7, X_mean7 = movingAverage(y, 7)
     movingAverage14, X_mean14 = movingAverage(y, 14)
+    movingAverage21, X_mean21 = movingAverage(y, 21)
     movingAverage30, X_mean30 = movingAverage(y, 30)
 
     # Calculating the forecast for moving averages
@@ -25,7 +26,8 @@ def plotDailyExtended(X, y, future, label, figure, axis, axX, axY):
     axis[axX, axY].bar(X, y, label=label)
     axis[axX, axY].plot(X_mean7, movingAverage7, 'g', label='1 week moving average')
     axis[axX, axY].plot(X_mean14, movingAverage14, 'orange', label='2 week moving average')
-    axis[axX, axY].plot(X_mean30, movingAverage30, 'r', label='1 month moving average')
+    axis[axX, axY].plot(X_mean21, movingAverage21, 'red', label='3 week moving average')
+    axis[axX, axY].plot(X_mean30, movingAverage30, 'purple', label='1 month moving average')
     # axis[axX, axY].plot(X_7_forecast, y_7_forecast.predicted_mean, label='Forecast: 1 week moving average')
     # axis[axX, axY].plot(X_14_forecast, y_14_forecast.predicted_mean, label='Forecast: 2 week moving average')
     # axis[axX, axY].plot(X_30_forecast, y_30_forecast.predicted_mean, label='Forecast: 1 month moving average')
