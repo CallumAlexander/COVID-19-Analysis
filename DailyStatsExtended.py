@@ -10,6 +10,7 @@ def plotAllDaily():
     plotDailyExtended(spain_X, spain_daily, 14, 'Spain', fig, ax, 1, 0)
     plotDailyExtended(italy_X, italy_daily, 14, 'Italy', fig, ax, 1, 1)
     plotDailyExtended(germany_X, germany_daily, 14, 'Germany', fig, ax, 2, 0)
+    plotDailyExtended(us_X, us_daily, 14, 'United States', fig, ax, 2, 1)
 
 
 def plotDailyExtended(X, y, future, label, figure, axis, axX, axY):
@@ -22,7 +23,7 @@ def plotDailyExtended(X, y, future, label, figure, axis, axX, axY):
     # Calculating the forecast for moving averages
     # X_7_forecast, y_7_forecast = maForecast(X_mean7, movingAverage7, future, 7)
     # X_14_forecast, y_14_forecast = maForecast(X_mean14, movingAverage14, future, 14)
-    # X_30_forecast, y_30_forecast = maForecast(X_mean30, movingAverage30, future, 30)
+    X_30_forecast, y_30_forecast = maForecast(X_mean30, movingAverage30, future, 30)
 
     axis[axX, axY].bar(X, y, label=label)
     axis[axX, axY].plot(X_mean7, movingAverage7, 'g', label='1 week moving average')
@@ -31,8 +32,9 @@ def plotDailyExtended(X, y, future, label, figure, axis, axX, axY):
     axis[axX, axY].plot(X_mean30, movingAverage30, 'purple', label='1 month moving average')
     # axis[axX, axY].plot(X_7_forecast, y_7_forecast.predicted_mean, label='Forecast: 1 week moving average')
     # axis[axX, axY].plot(X_14_forecast, y_14_forecast.predicted_mean, label='Forecast: 2 week moving average')
-    # axis[axX, axY].plot(X_30_forecast, y_30_forecast.predicted_mean, label='Forecast: 1 month moving average')
+    axis[axX, axY].plot(X_30_forecast, y_30_forecast.predicted_mean, label='Forecast: 1 month moving average')
     axis[axX, axY].grid()
+    # axis[axX, axY].set_ylim([0])
     axis[axX, axY].legend()
     axis[axX, axY].set(title=label)
 

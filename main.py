@@ -46,6 +46,8 @@ spain_X, spain_y = preprocess(df, 'Spain')
 uk_X, uk_y = preprocess(df, 'United Kingdom')
 germany_X, germany_y = preprocess(df, 'Germany')
 france_X, france_y = preprocess(df, 'France')
+us_X, us_y = preprocess(df, 'US')
+
 
 # Gathering derivatives
 uk_dailyY = delta(uk_y)
@@ -63,6 +65,9 @@ germany_deltaDaily = delta(germany_daily)
 france_daily = delta(france_y)
 france_deltaDaily = delta(france_daily)
 
+us_daily = delta(us_y)
+us_deltaDaily = delta(us_daily)
+
 # --------------------------------
 # Plotting data
 fig, ax = plt.subplots(nrows=3, ncols=2)
@@ -73,6 +78,7 @@ ax[0, 0].plot(italy_X, italy_y, label='Italy')
 ax[0, 0].plot(spain_X, spain_y, label='Spain')
 ax[0, 0].plot(germany_X, germany_y, label='Germany')
 ax[0, 0].plot(france_X, france_y, label='France')
+ax[0, 0].plot(us_X, us_y, label='United States')
 ax[0, 0].legend(fontsize='x-small')
 ax[0, 0].grid()
 ax[0, 0].set(xlabel='Number of days', ylabel=placeholder,
